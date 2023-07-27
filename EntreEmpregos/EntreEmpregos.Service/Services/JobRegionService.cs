@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 using EntreEmpregos.Domain.Contracts;
 using EntreEmpregos.Domain.Interfaces;
 using AutoMapper;
 using EntreEmpregos.Api.Entities;
+using EntreEmpregos.Domain.Exceptions;
 
 namespace EntreEmpregos.Service.Services;
 
@@ -17,13 +19,10 @@ public class JobRegionService: IJobRegionService
     }
 
 
-    public async Task<JobRegionResponse> CriarAsync(JobRegionRequest request)
+    public async Task<JobRegionResponse> AddAsync(JobRegionRequest request)
     {
-        if (request.Name is null)
-            throw new ArgumentException("Nome não pode ser nulo");
+        ValidateRequest(request);
 
-        if (request.Abbr is null)
-            throw new ArgumentException("Sigla não pode ser nula");
 
         var entity = _mapper.Map<JobRegion>(request);
 
@@ -32,23 +31,61 @@ public class JobRegionService: IJobRegionService
         return _mapper.Map<JobRegionResponse>(entity);
     }
 
-    public Task<JobRegionResponse> AtualizarAsync(Guid? id, JobRegionRequest request)
+
+
+    public async Task<JobRegionResponse> UpdateAsync(Guid id, JobRegionRequest request)
     {
-        throw new NotImplementedException();
+        ValidateRequest(request);
+        var entity = await GetById(id);
+
+        entity.Name = request.Name;
+        entity.Abbr = request.Abbr;
+
+        await _repository.EditAsync(entity);
+
+        return _mapper.Map<JobRegionResponse>(entity);
     }
 
-    public Task DeletarAsync(Guid id)
+    public async Task DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var entity = await GetById(id);
+        await _repository.RemoveAsync(entity!);
     }
 
-    public Task<JobRegionResponse> ObterPorIdAsync(Guid id)
+    public async Task<JobRegionResponse> GetAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var entity = await GetById(id);
+        
+        
+
+        return _mapper.Map<JobRegionResponse>(entity);
     }
 
-    public Task<IEnumerable<JobRegionResponse>> ObterTodosAsync()
+    public async Task<IEnumerable<JobRegionResponse>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        var entity = await _repository.ListAsync();
+        if (!entity.Any())
+            throw new RecordNotFoundException("Nenhuma região encontrada");
+        return _mapper.Map<IEnumerable<JobRegionResponse>>(entity);
+    }
+    
+    private async Task<JobRegion?> GetById(Guid id)
+    {
+        var entity = await _repository.FindAsync(id);
+        if (entity is null)
+            throw new RecordNotFoundException("Região não encontrada");
+        return entity;
+    }
+    
+    private static void ValidateRequest(JobRegionRequest request)
+    {
+        var validationResults = new List<ValidationResult>();
+
+        var isValid = Validator.TryValidateObject(request,
+            new ValidationContext(request), validationResults, true);
+
+        if (isValid) return;
+        var errorMessages = validationResults.Select(x => x.ErrorMessage);
+        throw new ValidationException(string.Join("\n", errorMessages));
     }
 }

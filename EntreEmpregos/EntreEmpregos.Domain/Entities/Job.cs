@@ -18,8 +18,8 @@ public class Job
 
     public JobContract Contract { get; set; }
 
-    public int LevelId { get; set; }
-    public int RegionId { get; set; }
+    public Guid LevelId { get; set; }
+    public Guid RegionId { get; set; }
 
 
     [StringLength(200)] public string Link { get; set; } = string.Empty;

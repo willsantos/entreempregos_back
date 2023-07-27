@@ -6,7 +6,7 @@ namespace EntreEmpregos.Api.Entities;
 public class JobLevel
 {
     [Key]
-    public int Id { get; set; }
+    public Guid Id { get; set; }
 
     [StringLength(60)]
     public string Description { get; set; }

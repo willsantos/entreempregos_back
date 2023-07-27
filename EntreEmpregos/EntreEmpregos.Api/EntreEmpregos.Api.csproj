@@ -25,12 +25,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Entities" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\EntreEmpregos.Domain\EntreEmpregos.Domain.csproj" />
       <ProjectReference Include="..\EntreEmpregos.Repository\EntreEmpregos.Repository.csproj" />
+      <ProjectReference Include="..\EntreEmpregos.Service\EntreEmpregos.Service.csproj" />
     </ItemGroup>
 
 </Project>

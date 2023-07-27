@@ -1,4 +1,7 @@
+using EntreEmpregos.Domain.Interfaces;
 using EntreEmpregos.Repository.Context;
+using EntreEmpregos.Repository.Repositories;
+using EntreEmpregos.Service.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,7 +16,13 @@ builder.Services.AddSwaggerGen();
 var connectionString = Environment.GetEnvironmentVariable("API_EE_CONNSTRING");
 builder.Services.AddDbContextPool<AppDbContext>(opt => opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
+builder.Services.AddScoped<IJobRegionRepository, JobRegionRepository>();
+builder.Services.AddScoped<IJobRegionService, JobRegionService>();
+
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
 
 var app = builder.Build();
 

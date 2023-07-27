@@ -14,7 +14,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _context = context;
     }
 
-    public async Task<T> FindAsync(Guid? id)
+    public async Task<T> FindAsync(Guid id)
     {
         return await _context.Set<T>().FindAsync(id);
     }
@@ -46,9 +46,9 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         await _context.SaveChangesAsync();
     }
 
-    public async Task RemoveAsync(Guid? id)
+    public async Task RemoveAsync(T item)
     {
-        _context.Remove(id);
+        _context.Remove(item);
         await _context.SaveChangesAsync();
     }
 

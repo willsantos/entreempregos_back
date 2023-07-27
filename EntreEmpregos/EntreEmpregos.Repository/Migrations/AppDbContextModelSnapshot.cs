@@ -21,9 +21,9 @@ namespace EntreEmpregos.Repository.Migrations
 
             modelBuilder.Entity("EntreEmpregos.Api.Entities.JobLevel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -37,9 +37,9 @@ namespace EntreEmpregos.Repository.Migrations
 
             modelBuilder.Entity("EntreEmpregos.Api.Entities.JobRegion", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Abbr")
                         .IsRequired()
@@ -108,14 +108,14 @@ namespace EntreEmpregos.Repository.Migrations
                     b.Property<int>("Format")
                         .HasColumnType("int");
 
-                    b.Property<int?>("JobLevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("JobLevelId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int?>("JobRegionId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("JobRegionId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int>("LevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("LevelId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Link")
                         .IsRequired()
@@ -130,8 +130,8 @@ namespace EntreEmpregos.Repository.Migrations
                     b.Property<DateTime>("Publication")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("RegionId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RegionId")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");

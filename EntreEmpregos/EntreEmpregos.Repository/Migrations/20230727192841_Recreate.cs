@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace EntreEmpregos.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Recreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,8 +36,7 @@ namespace EntreEmpregos.Repository.Migrations
                 name: "JobLevels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Description = table.Column<string>(type: "varchar(60)", maxLength: 60, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
@@ -52,8 +50,7 @@ namespace EntreEmpregos.Repository.Migrations
                 name: "JobRegions",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Name = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Abbr = table.Column<string>(type: "varchar(3)", maxLength: 3, nullable: false)
@@ -75,15 +72,17 @@ namespace EntreEmpregos.Repository.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Format = table.Column<int>(type: "int", nullable: false),
                     Contract = table.Column<int>(type: "int", nullable: false),
-                    LevelId = table.Column<int>(type: "int", nullable: false),
-                    RegionId = table.Column<int>(type: "int", nullable: false),
+                    LevelId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
+                    RegionId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Link = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Exclusivo = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     EmployerId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    DeletedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    JobLevelId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci"),
+                    JobRegionId = table.Column<Guid>(type: "char(36)", nullable: true, collation: "ascii_general_ci")
                 },
                 constraints: table =>
                 {
@@ -94,95 +93,49 @@ namespace EntreEmpregos.Repository.Migrations
                         principalTable: "Employers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "JobJobLevel",
-                columns: table => new
-                {
-                    JobsId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    LevelsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_JobJobLevel", x => new { x.JobsId, x.LevelsId });
                     table.ForeignKey(
-                        name: "FK_JobJobLevel_JobLevels_LevelsId",
-                        column: x => x.LevelsId,
+                        name: "FK_Jobs_JobLevels_JobLevelId",
+                        column: x => x.JobLevelId,
                         principalTable: "JobLevels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_JobJobLevel_Jobs_JobsId",
-                        column: x => x.JobsId,
-                        principalTable: "Jobs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "JobJobRegion",
-                columns: table => new
-                {
-                    JobsId = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    RegionsId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_JobJobRegion", x => new { x.JobsId, x.RegionsId });
-                    table.ForeignKey(
-                        name: "FK_JobJobRegion_JobRegions_RegionsId",
-                        column: x => x.RegionsId,
+                        name: "FK_Jobs_JobRegions_JobRegionId",
+                        column: x => x.JobRegionId,
                         principalTable: "JobRegions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_JobJobRegion_Jobs_JobsId",
-                        column: x => x.JobsId,
-                        principalTable: "Jobs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_JobJobLevel_LevelsId",
-                table: "JobJobLevel",
-                column: "LevelsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_JobJobRegion_RegionsId",
-                table: "JobJobRegion",
-                column: "RegionsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Jobs_EmployerId",
                 table: "Jobs",
                 column: "EmployerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Jobs_JobLevelId",
+                table: "Jobs",
+                column: "JobLevelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Jobs_JobRegionId",
+                table: "Jobs",
+                column: "JobRegionId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "JobJobLevel");
+                name: "Jobs");
 
             migrationBuilder.DropTable(
-                name: "JobJobRegion");
+                name: "Employers");
 
             migrationBuilder.DropTable(
                 name: "JobLevels");
 
             migrationBuilder.DropTable(
                 name: "JobRegions");
-
-            migrationBuilder.DropTable(
-                name: "Jobs");
-
-            migrationBuilder.DropTable(
-                name: "Employers");
         }
     }
 }
