@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http.HttpResults;
+using EntreEmpregos.Domain.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EntreEmpregos.Controllers;
@@ -7,9 +7,19 @@ namespace EntreEmpregos.Controllers;
 [Route("[controller]")]
 public class JobRegionController
 {
-    // [HttpPost]
-    // public async Task<IActionResult> AddAsync()
-    // {
-    //     return Ok();
-    // }
+    [HttpPost]
+    public async Task<IActionResult> AddAsync([FromBody] JobRegionRequest)
+    {
+        try
+        {
+            var result = await _
+            return Ok();
+        }
+        catch (Exception e)
+        {
+            return BadRequest("Falha ao cadastrar");
+        }
+        
+        
+    }
 }
