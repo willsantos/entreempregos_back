@@ -4,10 +4,9 @@ using EntreEmpregos.Repository.Context;
 
 namespace EntreEmpregos.Repository.Repositories;
 
-public class JobRegionRepository : BaseRepository<JobRegion>,
-    IJobRegionRepository
+public class JobLevelRepository : BaseRepository<JobLevel>, IJobLevelRepository
 {
-    public JobRegionRepository(AppDbContext context) : base(context)
+    public JobLevelRepository(AppDbContext context) : base(context)
     {
     }
 }
