@@ -15,5 +15,7 @@ public class MappingProfile : Profile
         CreateMap<JobLevelResponse, JobLevel>().ReverseMap();
         CreateMap<EmployerRequest, Employer>().ReverseMap();
         CreateMap<EmployerResponse, Employer>().ReverseMap();
+        CreateMap<TransGroupRequest, TransGroup>().ReverseMap();
+        CreateMap<TransGroupResponse, TransGroup>().ReverseMap();
     }
 }

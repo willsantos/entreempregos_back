@@ -23,6 +23,8 @@ builder.Services.AddScoped<IJobLevelRepository, JobLevelRepository>();
 builder.Services.AddScoped<IJobLevelService, JobLevelService>();
 builder.Services.AddScoped<IEmployerService, EmployerService>();
 builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
+builder.Services.AddScoped<ITransGroupService, TransGroupService>();
+builder.Services.AddScoped<ITransGroupRepository, TransGroupRepository>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
