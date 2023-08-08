@@ -6,9 +6,8 @@ public class Employer
 {
     public Guid Id { get; set; }
 
-    [StringLength(60)]
-    public string Name { get; set; } = string.Empty;
-    
+    [StringLength(60)] public string Name { get; set; } = string.Empty;
+
     public decimal Rating { get; set; }
 
     public DateTime CreatedAt { get; set; }
@@ -17,5 +16,5 @@ public class Employer
 
     public DateTime DeletedAt { get; set; }
 
-    public IList<Job> Jobs { get; set; }
+    //public IList<Job> Jobs { get; set; }
 }

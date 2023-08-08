@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using EntreEmpregos.Domain.Interfaces;
 using EntreEmpregos.Repository.Context;
 using EntreEmpregos.Repository.Repositories;
@@ -9,6 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.Converters.Add
+        (new JsonStringEnumConverter()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -16,6 +20,7 @@ builder.Services.AddSwaggerGen();
 var connectionString = Environment.GetEnvironmentVariable("API_EE_CONNSTRING");
 builder.Services.AddDbContextPool<AppDbContext>(opt =>
     opt.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 
 builder.Services.AddScoped<IJobRegionRepository, JobRegionRepository>();
 builder.Services.AddScoped<IJobRegionService, JobRegionService>();
@@ -25,6 +30,8 @@ builder.Services.AddScoped<IEmployerService, EmployerService>();
 builder.Services.AddScoped<IEmployerRepository, EmployerRepository>();
 builder.Services.AddScoped<ITransGroupService, TransGroupService>();
 builder.Services.AddScoped<ITransGroupRepository, TransGroupRepository>();
+builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IJobRepository, JobRepository>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
