@@ -4,10 +4,8 @@ using EntreEmpregos.Domain.Enums;
 
 namespace EntreEmpregos.Domain.Entities;
 
-public class Job
+public class Job : Entity
 {
-    [Key] public Guid Id { get; set; }
-
     public DateTime Publication { get; set; }
 
     [StringLength(60)] public string Position { get; set; } = string.Empty;
@@ -28,12 +26,5 @@ public class Job
 
     [StringLength(200)] public string Link { get; set; } = string.Empty;
 
-    public bool Exclusivo { get; set; } = false;
-
-
-    public DateTime CreatedAt { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
-
-    public DateTime DeletedAt { get; set; }
+    public bool Exclusivo { get; set; }
 }
