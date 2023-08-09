@@ -15,6 +15,28 @@ public class JobRepository : BaseRepository<Job>, IJobRepository
         _context = context;
     }
 
+    public async Task<JobResponse> FindWithEmployerAsync(Guid id)
+    {
+        return await _context.Jobs
+            .Include(job => job.Employer)
+            .Where(job => job.Id == id)
+            .Select(job => new JobResponse
+            {
+                Id = job.Id,
+                Publication = job.Publication,
+                Position = job.Position,
+                Format = job.Format,
+                Contract = job.Contract,
+                LevelId = job.LevelId,
+                RegionId = job.RegionId,
+                EmployerId = job.EmployerId,
+                Employer = job.Employer.Name,
+                Exclusivo = job.Exclusivo,
+                Link = job.Link
+            })
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<IEnumerable<object>> ListAllWithEmployerAsync()
     {
         return await _context.Jobs

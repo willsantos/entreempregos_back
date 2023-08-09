@@ -51,29 +51,29 @@ public class JobService : IJobService
     public async Task DeleteAsync(Guid id)
     {
         var entity = await GetById(id);
-        await _repository.RemoveAsync(entity!);
+        await _repository.RemoveAsync(entity);
     }
 
     public async Task<JobResponse> GetAsync(Guid id)
     {
-        var entity = await GetById(id);
+        var entity = await _repository.FindWithEmployerAsync(id);
         return _mapper.Map<JobResponse>(entity);
     }
 
     public async Task<IEnumerable<JobResponse>> GetAllAsync()
     {
-        var entity = await _repository.ListAllWithEmployerAsync();
-        if (!entity.Any())
+        var response = await _repository.ListAllWithEmployerAsync();
+        if (!response.Any())
             throw new RecordNotFoundException("Nenhuma vaga encontrada");
-        return _mapper.Map<IEnumerable<JobResponse>>(entity);
+        return _mapper.Map<IEnumerable<JobResponse>>(response);
     }
 
-    private async Task<Job?> GetById(Guid id)
+    private async Task<Job> GetById(Guid id)
     {
-        var entity = await _repository.FindAsync(id);
-        if (entity is null)
+        var response = await _repository.FindAsync(id);
+        if (response is null)
             throw new RecordNotFoundException("Vaga não encontrada");
-        return entity;
+        return response;
     }
 
     private static void ValidateRequest(JobRequest request)
