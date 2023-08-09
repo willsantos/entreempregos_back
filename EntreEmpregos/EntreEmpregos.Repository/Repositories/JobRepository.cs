@@ -18,6 +18,7 @@ public class JobRepository : BaseRepository<Job>, IJobRepository
     public async Task<JobResponse> FindWithEmployerAsync(Guid id)
     {
         return await _context.Jobs
+            .AsNoTracking()
             .Include(job => job.Employer)
             .Where(job => job.Id == id)
             .Select(job => new JobResponse
