@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EntreEmpregos.Repository.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230724144218_FixJobRelation")]
-    partial class FixJobRelation
+    [Migration("20230802232448_AddTransGroup")]
+    partial class AddTransGroup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,9 +24,9 @@ namespace EntreEmpregos.Repository.Migrations
 
             modelBuilder.Entity("EntreEmpregos.Api.Entities.JobLevel", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -40,9 +40,9 @@ namespace EntreEmpregos.Repository.Migrations
 
             modelBuilder.Entity("EntreEmpregos.Api.Entities.JobRegion", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Abbr")
                         .IsRequired()
@@ -111,11 +111,14 @@ namespace EntreEmpregos.Repository.Migrations
                     b.Property<int>("Format")
                         .HasColumnType("int");
 
-                    b.Property<int?>("JobRegionId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("JobLevelId")
+                        .HasColumnType("char(36)");
 
-                    b.Property<int>("LevelId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("JobRegionId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("LevelId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Link")
                         .IsRequired()
@@ -130,8 +133,8 @@ namespace EntreEmpregos.Repository.Migrations
                     b.Property<DateTime>("Publication")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("RegionId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RegionId")
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -140,24 +143,41 @@ namespace EntreEmpregos.Repository.Migrations
 
                     b.HasIndex("EmployerId");
 
+                    b.HasIndex("JobLevelId");
+
                     b.HasIndex("JobRegionId");
 
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("JobJobLevel", b =>
+            modelBuilder.Entity("EntreEmpregos.Domain.Entities.TransGroup", b =>
                 {
-                    b.Property<Guid>("JobsId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("LevelsId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.HasKey("JobsId", "LevelsId");
+                    b.Property<DateTime>("DeletedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.HasIndex("LevelsId");
+                    b.Property<string>("GroupId")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("varchar(20)");
 
-                    b.ToTable("JobJobLevel");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransGroups");
                 });
 
             modelBuilder.Entity("EntreEmpregos.Domain.Entities.Job", b =>
@@ -168,24 +188,18 @@ namespace EntreEmpregos.Repository.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("EntreEmpregos.Api.Entities.JobLevel", null)
+                        .WithMany("Jobs")
+                        .HasForeignKey("JobLevelId");
+
                     b.HasOne("EntreEmpregos.Api.Entities.JobRegion", null)
                         .WithMany("Jobs")
                         .HasForeignKey("JobRegionId");
                 });
 
-            modelBuilder.Entity("JobJobLevel", b =>
+            modelBuilder.Entity("EntreEmpregos.Api.Entities.JobLevel", b =>
                 {
-                    b.HasOne("EntreEmpregos.Domain.Entities.Job", null)
-                        .WithMany()
-                        .HasForeignKey("JobsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("EntreEmpregos.Api.Entities.JobLevel", null)
-                        .WithMany()
-                        .HasForeignKey("LevelsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("EntreEmpregos.Api.Entities.JobRegion", b =>

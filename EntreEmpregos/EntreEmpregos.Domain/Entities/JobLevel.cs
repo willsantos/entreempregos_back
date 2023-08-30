@@ -3,13 +3,9 @@ using EntreEmpregos.Domain.Entities;
 
 namespace EntreEmpregos.Api.Entities;
 
-public class JobLevel
+public class JobLevel : Entity
 {
-    [Key]
-    public int Id { get; set; }
+    [StringLength(60)] public string Description { get; set; }
 
-    [StringLength(60)]
-    public string Description { get; set; }
-    
     public IList<Job> Jobs { get; set; }
 }
