@@ -22,9 +22,12 @@ public class UserService : IUserService
     {
         ValidateRequest(request);
         var entity = _mapper.Map<User>(request);
+        Encrypt(request, entity);
+
         await _repository.AddAsync(entity);
         return _mapper.Map<UserResponse>(entity);
     }
+
 
     public async Task<UserResponse> UpdateAsync(Guid id, UserRequest request)
     {
@@ -75,5 +78,12 @@ public class UserService : IUserService
         if (isValid) return;
         var errorMessages = validationResults.Select(x => x.ErrorMessage);
         throw new ValidationException(string.Join("\n", errorMessages));
+    }
+
+    private static void Encrypt(UserRequest request, User entity)
+    {
+        var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+        entity.Password =
+            BCrypt.Net.BCrypt.HashPassword(request.Password, salt);
     }
 }
