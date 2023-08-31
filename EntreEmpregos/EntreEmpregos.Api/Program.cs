@@ -32,6 +32,8 @@ builder.Services.AddScoped<ITransGroupService, TransGroupService>();
 builder.Services.AddScoped<ITransGroupRepository, TransGroupRepository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

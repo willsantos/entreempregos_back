@@ -15,4 +15,5 @@ public class AppDbContext : DbContext
     public DbSet<JobRegion> JobRegions { get; set; }
     public DbSet<Employer> Employers { get; set; }
     public DbSet<TransGroup> TransGroups { get; set; }
+    public DbSet<User> Users { get; set; }
 }
