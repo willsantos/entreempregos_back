@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Security.Authentication;
 using EntreEmpregos.Domain.Contracts;
 using EntreEmpregos.Domain.Exceptions;
 using EntreEmpregos.Domain.Interfaces;
@@ -15,6 +16,32 @@ public class UserController : ControllerBase
     public UserController(IUserService service)
     {
         _service = service;
+    }
+
+    [HttpPost]
+    [Route("login")]
+    public async Task<IActionResult> Login([FromBody] UserRequest request)
+    {
+        try
+        {
+            var result = await _service.AuthenticateAsync(request);
+            return Ok(result);
+        }
+        catch (ValidationException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (AuthenticationException exception)
+        {
+            return Unauthorized(exception.Message);
+        }
+        catch (Exception exception)
+        {
+#if DEBUG
+            return StatusCode(500, exception.Message);
+#endif
+            return StatusCode(500, "Internal Server Error");
+        }
     }
 
     [HttpPost]

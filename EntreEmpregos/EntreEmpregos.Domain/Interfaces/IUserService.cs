@@ -9,4 +9,5 @@ public interface IUserService
     Task DeleteAsync(Guid id);
     Task<UserResponse> GetAsync(Guid id);
     Task<IEnumerable<UserResponse>> GetAllAsync();
+    Task<string> AuthenticateAsync(UserRequest request);
 }
