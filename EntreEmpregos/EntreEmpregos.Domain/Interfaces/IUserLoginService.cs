@@ -4,5 +4,5 @@ namespace EntreEmpregos.Domain.Interfaces;
 
 public interface IUserLoginService
 {
-    Task<string> AuthenticateAsync(UserLoginRequest request);
+    Task<TokenResponse> AuthenticateAsync(UserLoginRequest request);
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Authentication;
+using AutoMapper;
 using EntreEmpregos.Domain.Contracts;
 using EntreEmpregos.Domain.Entities;
 using EntreEmpregos.Domain.Interfaces;
@@ -11,14 +12,18 @@ public class UserLoginService : IUserLoginService
     private readonly IUserRepository _repository;
     private readonly TokenService _tokenService;
 
+    private readonly IMapper _mapper;
+
     public UserLoginService(IUserRepository repository,
-        TokenService tokenService)
+        TokenService tokenService,
+        IMapper mapper)
     {
         _repository = repository;
         _tokenService = tokenService;
+        _mapper = mapper;
     }
 
-    public async Task<string> AuthenticateAsync(UserLoginRequest request)
+    public async Task<TokenResponse> AuthenticateAsync(UserLoginRequest request)
     {
         ValidateRequest(request);
         var response =
@@ -27,8 +32,14 @@ public class UserLoginService : IUserLoginService
             throw new AuthenticationException("Usuario ou senha invalidos");
         if (!ValidatePassword(request, response))
             throw new AuthenticationException("usuario ou senha invalidos");
+        var token = _tokenService.Generate(response);
 
-        return _tokenService.Generate(response);
+        var authResponse = new TokenResponse
+        {
+            Token = token
+        };
+
+        return authResponse;
     }
 
 
