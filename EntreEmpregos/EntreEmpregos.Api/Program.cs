@@ -4,7 +4,6 @@ using EntreEmpregos.Repository.Context;
 using EntreEmpregos.Repository.Repositories;
 using EntreEmpregos.Service.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,13 +34,17 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserLoginService, UserLoginService>();
 builder.Services.AddTransient<TokenService>();
 
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddCors(Options=>{
-    Options.AddPolicy("CorsPolicy", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+builder.Services.AddCors(Options =>
+{
+    Options.AddPolicy("CorsPolicy",
+        builder =>
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 

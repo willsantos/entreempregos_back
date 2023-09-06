@@ -11,20 +11,22 @@ namespace EntreEmpregos.Api.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
+    private readonly IUserLoginService _loginService;
     private readonly IUserService _service;
 
-    public UserController(IUserService service)
+    public UserController(IUserService service, IUserLoginService loginService)
     {
         _service = service;
+        _loginService = loginService;
     }
 
     [HttpPost]
     [Route("login")]
-    public async Task<IActionResult> Login([FromBody] UserRequest request)
+    public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
     {
         try
         {
-            var result = await _service.AuthenticateAsync(request);
+            var result = await _loginService.AuthenticateAsync(request);
             return Ok(result);
         }
         catch (ValidationException exception)

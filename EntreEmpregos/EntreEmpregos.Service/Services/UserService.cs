@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Security.Authentication;
 using AutoMapper;
 using EntreEmpregos.Domain.Contracts;
 using EntreEmpregos.Domain.Entities;
@@ -64,19 +63,6 @@ public class UserService : IUserService
         return _mapper.Map<IEnumerable<UserResponse>>(response);
     }
 
-    public async Task<string> AuthenticateAsync(UserRequest request)
-    {
-        ValidateRequest(request);
-        var response =
-            await _repository.FindAsync(prop => prop.Email == request.Email);
-        if (response is null)
-            throw new AuthenticationException("Usuario ou senha invalidos");
-        if (!ValidatePassword(request, response))
-            throw new AuthenticationException("usuario ou senha invalidos");
-
-        return _tokenService.Generate(response);
-    }
-
 
     private async Task<User> GetById(Guid id)
     {
@@ -103,10 +89,5 @@ public class UserService : IUserService
         var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
         entity.Password =
             BCrypt.Net.BCrypt.HashPassword(request.Password, salt);
-    }
-
-    private static bool ValidatePassword(UserRequest request, User entity)
-    {
-        return BCrypt.Net.BCrypt.Verify(request.Password, entity.Password);
     }
 }
