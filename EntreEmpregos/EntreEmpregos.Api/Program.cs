@@ -40,11 +40,11 @@ builder.Services.AddTransient<TokenService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.AddCors(Options =>
+builder.Services.AddCors(options =>
 {
-    Options.AddPolicy("CorsPolicy",
-        builder =>
-            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("CorsPolicy",
+        policyBuilder =>
+            policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 
